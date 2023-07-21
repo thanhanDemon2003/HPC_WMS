@@ -1,0 +1,105 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.hpc_wms"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="33" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:5:5-77
+11-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:5:22-75
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:3:5-67
+12-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:3:22-64
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->[com.facebook.flipper:flipper:0.182.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\684bdc1ae0c2fdd88bd75410875c312e\transformed\jetified-flipper-0.182.0\AndroidManifest.xml:16:5-76
+13-->[com.facebook.flipper:flipper:0.182.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\684bdc1ae0c2fdd88bd75410875c312e\transformed\jetified-flipper-0.182.0\AndroidManifest.xml:16:22-73
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->[:react-native-community_netinfo] C:\Users\ThanhAn\Desktop\HPC_WMS\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-79
+14-->[:react-native-community_netinfo] C:\Users\ThanhAn\Desktop\HPC_WMS\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:22-76
+15
+16    <application
+16-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:5:5-24:19
+17        android:name="com.hpc_wms.MainApplication"
+17-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:6:7-38
+18        android:allowBackup="false"
+18-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:10:7-34
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.7.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\1343203d94428bde75b0ef4ed607a555\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+20        android:debuggable="true"
+21        android:icon="@mipmap/logoapp"
+21-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:8:7-37
+22        android:label="@string/app_name"
+22-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:7:7-39
+23        android:roundIcon="@mipmap/logoapptron"
+23-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:9:7-46
+24        android:theme="@style/AppTheme"
+24-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:11:7-38
+25        android:usesCleartextTraffic="true" >
+25-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:8:9-44
+26        <activity
+26-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:11:9-111
+27            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+27-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:11:19-83
+28            android:exported="false" />
+28-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\debug\AndroidManifest.xml:11:84-108
+29        <activity
+29-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:12:7-23:18
+30            android:name="com.hpc_wms.MainActivity"
+30-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:13:9-37
+31            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+31-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:15:9-118
+32            android:exported="true"
+32-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:18:9-32
+33            android:label="@string/app_name"
+33-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:14:9-41
+34            android:launchMode="singleTask"
+34-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:16:9-40
+35            android:windowSoftInputMode="adjustResize" >
+35-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:17:9-51
+36            <intent-filter>
+36-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:19:9-22:25
+37                <action android:name="android.intent.action.MAIN" />
+37-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:20:13-65
+37-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:20:21-62
+38
+39                <category android:name="android.intent.category.LAUNCHER" />
+39-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:21:13-73
+39-->C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\src\main\AndroidManifest.xml:21:23-70
+40            </intent-filter>
+41        </activity>
+42
+43        <meta-data
+43-->[com.facebook.soloader:soloader:0.10.5] C:\Users\ThanhAn\.gradle\caches\transforms-3\464c98a922121b90834ec974087e7367\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:12:9-14:37
+44            android:name="com.facebook.soloader.enabled"
+44-->[com.facebook.soloader:soloader:0.10.5] C:\Users\ThanhAn\.gradle\caches\transforms-3\464c98a922121b90834ec974087e7367\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:13:13-57
+45            android:value="false" />
+45-->[com.facebook.soloader:soloader:0.10.5] C:\Users\ThanhAn\.gradle\caches\transforms-3\464c98a922121b90834ec974087e7367\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:14:13-34
+46
+47        <provider
+47-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
+48            android:name="androidx.startup.InitializationProvider"
+48-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:27:13-67
+49            android:authorities="com.hpc_wms.androidx-startup"
+49-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:28:13-68
+50            android:exported="false" >
+50-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:29:13-37
+51            <meta-data
+51-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
+52                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+52-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:32:17-75
+53                android:value="androidx.startup" />
+53-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\ae8a9c7aca62a58ed39846a990ecd98f\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:33:17-49
+54            <meta-data
+54-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\217d4a532ea2ee1aadb1217cbb026886\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
+55                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+55-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\217d4a532ea2ee1aadb1217cbb026886\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
+56                android:value="androidx.startup" />
+56-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ThanhAn\.gradle\caches\transforms-3\217d4a532ea2ee1aadb1217cbb026886\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
+57        </provider>
+58    </application>
+59
+60</manifest>

@@ -1,0 +1,5 @@
+com.hpc_wms.test.app-androidTest-0 C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\build\generated\res\resValues\androidTest\debug
+com.hpc_wms.test.app-androidTest-1 C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\build\generated\res\rs\androidTest\debug
+com.hpc_wms.test.app-mergeDebugAndroidTestResources-2 C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.hpc_wms.test.app-mergeDebugAndroidTestResources-3 C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.hpc_wms.test.app-merged_res-4 C:\Users\ThanhAn\Desktop\HPC_WMS\android\app\build\intermediates\merged_res\debugAndroidTest
