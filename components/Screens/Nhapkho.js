@@ -63,6 +63,8 @@ const Nhapkho = ({ user }) => {
     setPage(1);
     fetchData(filterType, status.status, date, 1);
   }
+
+
   useEffect(() => {
     setPage(1);
     fetchData();
