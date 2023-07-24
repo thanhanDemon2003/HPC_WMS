@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, SafeAreaView } from 'react-native';
 
 const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
@@ -11,9 +11,9 @@ const LoadingScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
       <ActivityIndicator size="30" color={'#00AFCE'} />
-    </View>
+    </SafeAreaView>
   );
 };
 

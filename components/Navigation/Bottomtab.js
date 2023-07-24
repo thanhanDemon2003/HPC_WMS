@@ -17,7 +17,6 @@ const Tab = createBottomTabNavigator();
 
 const Bottomtab = () => {
   const { user } = useContext(AuthContext);
-  console.log('context:', user);
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
     setOpen(!open);

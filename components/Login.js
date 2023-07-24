@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Pressable } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, SafeAreaView } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
@@ -17,12 +17,10 @@ const LoginForm = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.Login(username, password);
-      const user = response.user
-      console.log('hiiiii >>>', response.success);
+      const user = response.user;
 
       if (user) {
         loginContext(user);
-        console.log(AuthContext);
         if (rememberPassword) {
           await AsyncStorage.setItem('username', username);
           await AsyncStorage.setItem('password', password);
@@ -34,11 +32,8 @@ const LoginForm = ({ navigation }) => {
       else {
         Alert.alert('Thông Báo', response.message)
       }
-      console.log('Username:', username);
-      console.log('Password:', password);
     }
     catch (error) {
-      console.log(error);
       Alert.alert('Thông Báo', 'Lỗi từ server hoặc lỗi mạng');
     }
   };
@@ -61,7 +56,7 @@ const LoginForm = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Đăng Nhập</Text>
       <TextInput
         placeholderTextColor='black'
@@ -116,7 +111,7 @@ const LoginForm = ({ navigation }) => {
           }}>Đăng Nhập</Text>
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

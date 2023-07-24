@@ -1,5 +1,5 @@
 import React, { useEffect, useState  } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 
@@ -9,7 +9,6 @@ const Hang = ({route}) => {
   
   const [items, setItems] = useState([]);
   const {sp} = route.params;
-  console.log(sp)
   
 
   useEffect(() => {
@@ -22,7 +21,6 @@ const Hang = ({route}) => {
       const data = response.items;
       setItems((prevItems) => [...prevItems, ...data]);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -42,7 +40,7 @@ const Hang = ({route}) => {
     </View>
   );
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={items}
         renderItem={renderItem}
@@ -50,7 +48,7 @@ const Hang = ({route}) => {
         numColumns={1}
         contentContainerStyle={styles.listContainer}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

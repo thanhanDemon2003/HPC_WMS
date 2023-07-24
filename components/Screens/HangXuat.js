@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 
@@ -17,7 +17,6 @@ const Hangxuat = ({ route }) => {
       const data = response.items;
       setItems((prevItems) => [...prevItems, ...data]);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -38,7 +37,7 @@ const Hangxuat = ({ route }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={items}
         renderItem={renderItem}
@@ -46,7 +45,7 @@ const Hangxuat = ({ route }) => {
         numColumns={1}
         contentContainerStyle={styles.listContainer}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,6 @@ import NetInfo from '@react-native-community/netinfo';
 const Kho = ({ user }) => {
 
 
-  console.log(user)
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [searchTerm, setsearchTerm] = useState('');
@@ -38,7 +37,6 @@ const Kho = ({ user }) => {
         setItems((prevItems) => [...prevItems, ...data]);
       }
     } catch (error) {
-      console.log('error>>', error);
       const savedData = await AsyncStorage.getItem('products');
       const data = JSON.parse(savedData);
       setItems(data);
@@ -81,7 +79,7 @@ const Kho = ({ user }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{  flexDirection: 'column', // Hiển thị các phần tử ngang hàng // Canh giữa các phần tử theo chiều dọc
     paddingHorizontal: 'center',
     marginBottom: 5, backgroundColor:'white',borderBottomWidth: 0.5, alignItems: 'flex-start',
@@ -109,7 +107,7 @@ const Kho = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

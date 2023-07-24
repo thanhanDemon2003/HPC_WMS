@@ -1,6 +1,6 @@
 // Xuatkho.js
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +24,6 @@ const Nhapcat = ({ user }) => {
   const navigation = useNavigation();
 
   const handleItemPress = (item) => {
-    console.log(item.ID_TRANSFER);
     navigation.navigate('Hangnhapcat', { sp: item.ID_TRANSFER });
   };
 
@@ -44,7 +43,6 @@ const Nhapcat = ({ user }) => {
     fetchData(filterType, filterTypeTT, date);
   };
   const handleFilterChange = (value) => {
-    console.log("Selected value: ", filterType, filterTypeTT);
     setSelectedFilter(value.value);
     if (value.value === 'custom') {
       showDatePicker();
@@ -61,7 +59,6 @@ const Nhapcat = ({ user }) => {
     data = JSON.parse(savedData);
   }
   const handleFilterChangeTT = (status) => {
-    console.log("Selected value: ", filterType, filterTypeTT);
     setSelectedFilterTT(status.status);
     setItems([]);
     setPage(1);
@@ -98,7 +95,6 @@ const Nhapcat = ({ user }) => {
       }
 
     } catch (error) {
-      console.log(error);
       Alert.alert(
         'Thông báo',
         'Lỗi dữ liệu, bạn có muốn load lại dữ liệu được lưu không?',
@@ -151,7 +147,7 @@ const Nhapcat = ({ user }) => {
     { label: 'Hủy', status: '4' },
   ];
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.filterContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Icon style={{ left: 10 }} name="calendar-outline" size={18} color="#808080"></Icon>
@@ -204,7 +200,7 @@ const Nhapcat = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

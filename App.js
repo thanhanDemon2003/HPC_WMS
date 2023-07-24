@@ -10,7 +10,6 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const NavigationFinal =() =>{
   const { isLoggedIn } = useContext(AuthContext);
-  console.log('......', isLoggedIn);
   return(
     <NavigationContainer>
     {isLoggedIn ? <AppNavigationContainer /> : <LoginForm />}
