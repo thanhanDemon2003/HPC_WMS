@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Hangxuat = ({ route }) => {
   const [items, setItems] = useState([]);
@@ -21,7 +22,7 @@ const Hangxuat = ({ route }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
+    <SafeAreaProvider style={styles.item}>
       <View style={styles.itemContent}>
         <Text style={styles.text}>Tên sản phẩm: {item.TEN_SP}</Text>
         <View style={styles.itemRow}>
@@ -33,7 +34,7 @@ const Hangxuat = ({ route }) => {
           <Text style={styles.detailText1}> {item.KL_XUAT} Kg</Text>
         </View>
       </View>
-    </View>
+    </SafeAreaProvider>
   );
 
   return (

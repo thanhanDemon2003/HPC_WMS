@@ -8,7 +8,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Nhapkho = ({ user }) => {
   const [items, setItems] = useState([]);
@@ -144,7 +144,7 @@ const Nhapkho = ({ user }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       <View style={styles.filterContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Icon style={{ left: 10 }} name="calendar-outline" size={18} color="#808080"></Icon>
@@ -198,7 +198,7 @@ const Nhapkho = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

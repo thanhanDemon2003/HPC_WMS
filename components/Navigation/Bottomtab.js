@@ -1,4 +1,4 @@
-import { StyleSheet, View, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, StatusBar, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Kho from '../Screens/Kho';
@@ -100,7 +100,7 @@ const Bottomtab = () => {
             fontFamily: 'seguisb' },
           tabBarLabel: 'Nhập Cắt',
           headerShown: true,
-          headerTitle: 'Danh Sách Hàng Nhập Cắt',
+          headerTitle: 'Nhập Cắt Chuyển',
           headerTitleAlign: 'center',
           headerTitleStyle: {fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' },
@@ -113,7 +113,7 @@ const Bottomtab = () => {
           tabBarLabelStyle: {
             fontFamily: 'seguisb' },
           headerShown: true,
-          headerTitle: 'Danh Sách Hàng Xuất Cắt',
+          headerTitle: 'Xuất Cắt Chuyển',
           headerTitleAlign: 'center',
           headerTitleStyle: { fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }

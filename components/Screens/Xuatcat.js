@@ -9,7 +9,7 @@ import NetInfo from '@react-native-community/netinfo';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const Xuatcat = ({ user }) => {
@@ -147,7 +147,7 @@ const Xuatcat = ({ user }) => {
     { label: 'Hủy', status: '4' },
   ];
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       <View style={styles.filterContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Icon style={{ left: 10 }} name="calendar-outline" size={18} color="#808080"></Icon>
@@ -200,7 +200,7 @@ const Xuatcat = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

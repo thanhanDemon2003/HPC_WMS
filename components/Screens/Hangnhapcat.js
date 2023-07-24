@@ -2,6 +2,7 @@ import React, { useEffect, useState  } from 'react';
 import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 
@@ -40,7 +41,7 @@ const Hangnhapcat = ({route}) => {
     </View>
   );
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       <FlatList
         data={items}
         renderItem={renderItem}
@@ -48,7 +49,7 @@ const Hangnhapcat = ({route}) => {
         numColumns={1}
         contentContainerStyle={styles.listContainer}
       />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

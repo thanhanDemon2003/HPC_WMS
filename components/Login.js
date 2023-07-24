@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, SafeAreaView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, StatusBar } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
 import axios from './API/Api';
 import { AuthContext } from './Context/Appcontext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const LoginForm = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -56,7 +57,7 @@ const LoginForm = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       <Text style={styles.text}>Đăng Nhập</Text>
       <TextInput
         placeholderTextColor='black'
@@ -111,7 +112,7 @@ const LoginForm = ({ navigation }) => {
           }}>Đăng Nhập</Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

@@ -21,9 +21,9 @@ const AppNavigationContainer = () => {
           headerStyle: { backgroundColor: '#00AFCE' },}} name="Chitiet" component={Hang} />
       <Stack.Screen options={{ headerTitle: 'Chi tiết hàng xuất', headerTintColor: 'white', headerStyle:{fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }}} name="Hangxuat" component={Hangxuat} />
-          <Stack.Screen options={{ headerTitle: 'Chi tiết hàng nhập cắt',headerTintColor: 'white', headerStyle:{fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
+          <Stack.Screen options={{ headerTitle: 'Chi tiết nhập cắt chuyển',headerTintColor: 'white', headerStyle:{fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' },}} name="Hangnhapcat" component={Hangnhapcat} />
-      <Stack.Screen options={{ headerTitle: 'Chi tiết hàng xuất cắt', headerTintColor: 'white', headerStyle:{fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
+      <Stack.Screen options={{ headerTitle: 'Chi tiết xuất cách chuyển', headerTintColor: 'white', headerStyle:{fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }}} name="Hangxuatcat" component={Hangxuatcat} />
     </Stack.Navigator>
 
