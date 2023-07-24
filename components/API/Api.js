@@ -1,12 +1,10 @@
 import axios from 'axios';
-import moment from 'moment';
 import 'moment-timezone';
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.14:3000/', 
+  baseURL: 'http://222.252.6.94:3000/', 
   timeout: 5000 ,
 });
-//http://localhost:3000/ibibt/searchProduct/12?page=1
 const getItemsPage = async (user, page, searchTerm) => {
   try {
     console.log('hiiiii', user, page, searchTerm);
@@ -17,7 +15,6 @@ const getItemsPage = async (user, page, searchTerm) => {
     throw error;
   }
 };
-//http://localhost:3000/ibibt/getimportpage/12?page=1 
 const getImportItemsPage = async (user, filterType, page, date, filterTypeTT) => {
   try {
     const response = await api.get(`/ibibt/getimportpage/${user}?page=${page}`);
@@ -26,7 +23,6 @@ const getImportItemsPage = async (user, filterType, page, date, filterTypeTT) =>
     throw error;
   }
 };
-//http://localhost:3000/ibibt/getexportpage/12?page=1 
 const getExportItemsPage = async (user, filterType, page, date, filterTypeTT) => {
   try {
     const response = await api.get(`/ibibt/getexportpage/${user}?page=${page}`);
@@ -65,8 +61,6 @@ const locNhapHang = async (user, filterType, page, date, filterTypeTT) => {
     throw error;
   }
 }
-
-
 const locXuatHang = async (user, filterType, page, date, filterTypeTT) => {
   console.log('>>>>>>',user, filterType, page, date, filterTypeTT)
   try {
@@ -76,7 +70,58 @@ const locXuatHang = async (user, filterType, page, date, filterTypeTT) => {
     throw error;
   }
 }
-
+const getItemMua = async (user, filterType, page, date, filterTypeTT) => {
+  try {
+    const response = await api.get(`/ibibt/getpalletmua/${user}?page=${page}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+const getItemBan = async (user, filterType, page, date, filterTypeTT) => {
+  try {
+    const response = await api.get(`/ibibt/getpalletban/${user}?page=${page}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+const locItemMua = async (user, filterType, page, date, filterTypeTT) => {
+  console.log('>>>>>>',user, filterType, page, date, filterTypeTT)
+  try {
+    const response = await api.get(`/ibibt/locpalletmua/${user}/${filterType}?page=${page}&date=${date}&statusfe=${filterTypeTT}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+const locItemBan = async (user, filterType, page, date, filterTypeTT) => {
+  console.log('>>>>>>',user, filterType, page, date, filterTypeTT)
+  try {
+    const response = await api.get(`/ibibt/locpalletban/${user}/${filterType}?page=${page}&date=${date}&statusfe=${filterTypeTT}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+const itemMua = async (sp) => {
+  try {
+    const response = await api.get(`/ibibt/getitemmua?sp=${sp}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+const itemBan = async (sp) => {
+  try {
+    const response = await api.get(`/ibibt/getitemban?sp=${sp}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 const Login = async (username, password) => {
   try {
     const response = await api.post(`/ibibt/Login`, {
@@ -93,7 +138,6 @@ const Login = async (username, password) => {
     }
   }
 };
-
 export default {
   getItemsPage,
   getExportItemsPage,
@@ -102,5 +146,11 @@ export default {
   detailSanPham,
   detailSanPhamXuat,
   locXuatHang,
-  locNhapHang
+  locNhapHang,
+  getItemMua,
+  getItemBan,
+  locItemMua,
+  locItemBan,
+  itemMua,
+  itemBan
 };

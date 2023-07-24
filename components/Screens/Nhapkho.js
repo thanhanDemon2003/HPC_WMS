@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'left',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     height: 160,
     backgroundColor: '#fff',
     borderColor: 'black',
@@ -263,18 +263,20 @@ const styles = StyleSheet.create({
   itemContent: {
     position: 'relative',
     margin: 10,
+
   },
   text: {
-    left: 3,
     fontSize: 16,
     fontWeight: '500',
     color: 'black',
     fontFamily: 'seguisb',
+    marginTop:5
   },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+    marginBottom: 5,
   },
   labelText: {
     flex: 1,
@@ -284,21 +286,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Segoe UI'
   },
   text1: {
-    left: 3,
     fontSize: 15,
     fontWeight: 'normal',
     color: 'black',
     fontFamily: 'Segoe UI',
   },
   itemDetails: {
-    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginTop: 100,
   },
   detailText: {
     flex: 1,
-    marginTop: 10,
     fontSize: 15,
     fontWeight: 'bold',
     fontFamily: 'seguisb',

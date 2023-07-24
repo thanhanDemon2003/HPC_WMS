@@ -10,6 +10,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import MenuDrawer from 'react-native-side-drawer'
 import { Text } from 'react-native-elements';
+import Nhapcat from '../Screens/Nhapcat';
+import Xuatcat from '../Screens/Xuatcat';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,8 +41,13 @@ const Bottomtab = () => {
           } else if (route.name === 'XuatkhoScreen') {
             iconName = focused ? 'arrow-circle-right' : 'share-square';
           } else if (route.name === 'Information') {
-            iconName = focused ? 'question' : 'exclamation'
+            iconName = focused ? 'sign-in' : 'user'
+          }else if (route.name === 'Nhapcat') {
+            iconName = focused ? 'check' : 'shopping-cart';
+          } else if (route.name === 'Xuatcat') {
+            iconName = focused ? 'bus' : 'caret-square-o-down'
           }
+          
 
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -87,6 +94,32 @@ const Bottomtab = () => {
           headerStyle: { backgroundColor: '#00AFCE' }
         }}
         name="XuatkhoScreen">{() => <Xuatkho user={user} />}
+      </Tab.Screen>
+      <Tab.Screen
+        options={{
+          tabBarLabelStyle: {
+            fontFamily: 'seguisb' },
+          tabBarLabel: 'Nhập Cắt',
+          headerShown: true,
+          headerTitle: 'Danh Sách Hàng Nhập Cắt',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
+          headerStyle: { backgroundColor: '#00AFCE' },
+        }}
+        name="Nhapcat">{() => <Nhapcat user={user} />}
+      </Tab.Screen>
+      <Tab.Screen
+        options={{
+          tabBarLabel: 'Xuất Cắt',
+          tabBarLabelStyle: {
+            fontFamily: 'seguisb' },
+          headerShown: true,
+          headerTitle: 'Danh Sách Hàng Xuất Cắt',
+          headerTitleAlign: 'center',
+          headerTitleStyle: { fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
+          headerStyle: { backgroundColor: '#00AFCE' }
+        }}
+        name="Xuatcat">{() => <Xuatcat user={user} />}
       </Tab.Screen>
       <Tab.Screen
         options={{

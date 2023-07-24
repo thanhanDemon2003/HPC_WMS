@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect  } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Alert, Pressable } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
@@ -23,7 +23,6 @@ const LoginForm = ({ navigation }) => {
       if (user) {
         loginContext(user);
         console.log(AuthContext);
-        Alert.alert('Thông Báo', 'Đăng Nhập Thành Công')
         if (rememberPassword) {
           await AsyncStorage.setItem('username', username);
           await AsyncStorage.setItem('password', password);
@@ -47,14 +46,14 @@ const LoginForm = ({ navigation }) => {
     const getStoredCredentials = async () => {
       const storedUsername = await AsyncStorage.getItem('username');
       const storedPassword = await AsyncStorage.getItem('password');
-  
+
       if (storedUsername && storedPassword) {
         setUsername(storedUsername);
         setPassword(storedPassword);
         setRememberPassword(true);
       }
     };
-  
+
     getStoredCredentials();
   }, []);
   const toggleShowPassword = () => {
@@ -65,6 +64,10 @@ const LoginForm = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.text}>Đăng Nhập</Text>
       <TextInput
+        placeholderTextColor='black'
+        fontSize={15}
+        color='black'
+        fontFamily='seguisb'
         style={styles.input}
         placeholder="Tài khoản"
         value={username}
@@ -72,6 +75,10 @@ const LoginForm = ({ navigation }) => {
       />
       <View style={styles.passwordContainer}>
         <TextInput
+          placeholderTextColor='black'
+          fontSize={15}
+          fontFamily='seguisb'
+          color='black'
           style={styles.passwordInput}
           placeholder="Mật khẩu"
           secureTextEntry={!showPassword}
@@ -94,12 +101,20 @@ const LoginForm = ({ navigation }) => {
         <CheckBox
           checked={rememberPassword}
           onPress={() => setRememberPassword(!rememberPassword)}
-          checkedColor="blue"
+          checkedColor="#00AFCE"
         />
         <Text style={styles.checkboxLabel}>Lưu mật khẩu</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="Đăng nhập" onPress={handleLogin} />
+        <Pressable style={styles.button} onPress={handleLogin}>
+          <Text style={{
+            textAlign: 'center',
+            color: 'white',
+            fontSize: 16,
+            fontWeight: 'bold',
+            fontFamily: 'seguisb'
+          }}>Đăng Nhập</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -110,12 +125,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: 'white',
   },
   text: {
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'blue',
+    color: '#00AFCE',
     marginBottom: 50
   }
   ,
@@ -151,14 +167,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    left: -15
   },
   checkboxLabel: {
     marginLeft: -15,
+    fontSize: 15,
+    color: 'black',
+    fontFamily: 'seguisb',
+    fontWeight: 'thin',
   },
   buttonContainer: {
     marginTop: 10,
-
   },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#00AFCE',
+    height: 40,
+    borderRadius: 5,
+    justifyContent: 'center',
+  }
 });
 
 export default LoginForm;

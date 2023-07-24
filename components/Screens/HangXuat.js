@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'left',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     height: 170,
     backgroundColor: '#fff',
     borderColor: 'black',
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
   itemContent: {
     position: 'relative',
     margin: 10,
-    bottom:25
   },
   text: {
     left: 5,
@@ -84,11 +83,12 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
   text1: {
-    flex:0,
-    top: 20,
     left: 5,
+    flex:0,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
   text2: {
     textAlign: 'right',
     flex:1,
-    top:20,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
@@ -105,10 +104,8 @@ const styles = StyleSheet.create({
 
   },
   itemDetails: {
-    position:'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:100
   },
   detailText: {
     flex:0,

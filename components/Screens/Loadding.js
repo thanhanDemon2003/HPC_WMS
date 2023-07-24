@@ -11,8 +11,8 @@ const LoadingScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
+      <ActivityIndicator size="30" color={'#00AFCE'} />
     </View>
   );
 };

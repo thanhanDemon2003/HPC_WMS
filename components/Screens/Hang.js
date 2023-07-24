@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'left',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     height: 170,
     backgroundColor: '#fff',
     borderColor: 'black',
@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
   itemContent: {
     position: 'relative',
     margin: 10,
-    bottom: 25
   },
   text: {
     left: 5,
@@ -85,13 +84,13 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb',
-    top:10
 
   },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:20
+    marginTop:10,
+    marginBottom:10
   },
   text1: {
     flex:0,
@@ -112,10 +111,8 @@ const styles = StyleSheet.create({
 
   },
   itemDetails: {
-    position:'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:115
   },
   detailText: {
     flex:0,
@@ -127,6 +124,7 @@ const styles = StyleSheet.create({
 
   },
   detailText1: {
+    left: 3,
     textAlign: 'right',
     flex:1,
     fontSize: 15,

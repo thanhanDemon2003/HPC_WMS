@@ -77,15 +77,20 @@ const Kho = ({ user }) => {
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1);
+    fetchData();
   };
 
   return (
     <View style={styles.container}>
       <View style={{  flexDirection: 'column', // Hiển thị các phần tử ngang hàng // Canh giữa các phần tử theo chiều dọc
     paddingHorizontal: 'center',
-    marginBottom: 5, backgroundColor:'white',borderBottomWidth: 0.5, 
+    marginBottom: 5, backgroundColor:'white',borderBottomWidth: 0.5, alignItems: 'flex-start',
      }}>
       <TextInput
+        placeholderTextColor='black'
+        fontSize={15}
+        fontFamily='seguisb'
+        color='black'
         style={styles.searchBar}
         placeholder="Tìm kiếm..."
         value={searchTerm}
@@ -115,10 +120,10 @@ const styles = StyleSheet.create({
     backgroundColor:'white'
   },
   searchBar: {
-    left: 10,
+    left: 5,
     marginTop: 20,
     height: 40,
-    width: 260,
+    width: '70%',
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 10,
@@ -127,8 +132,9 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     marginBottom:20,
-    width: 100,
-    marginLeft: 280,
+    width: '25%',
+    height:40,
+    marginLeft: '74%',
     marginTop: -50,
     backgroundColor: '#00AFCE',
     paddingVertical: 10,
@@ -140,6 +146,7 @@ const styles = StyleSheet.create({
   searchButtonText: {
     color: 'white',
     fontWeight: '600',
+    fontSize: 13,
   },
   listContainer: {
     flexGrow: 1,
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'center',
-    height: 130,
+    height: 150,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,  
