@@ -1,27 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { BackHandler } from 'react-native';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, StatusBar, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, StatusBar, ActivityIndicator, BackHandler, ToastAndroid } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 const Kho = ({ user }) => {
 
-
+  const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [searchTerm, setsearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  let lastPress = 0;
+  const timer  = useRef(null);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    const backAction = () => {
+      if (lastPress + 3000 >= Date.now()) {
+        BackHandler.exitApp();
+      } else {
+        ToastAndroid.show('Nhấn lần nữa để thoát', ToastAndroid.SHORT);
+        lastPress = Date.now();
+        navigation.jumpTo('KhoScreen');
+      }
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 5000);
+    timer.current = setTimeout(() => setIsLoading(false), 5000);
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -45,12 +70,12 @@ const Kho = ({ user }) => {
         setItems((prevItems) => [...prevItems, ...data]);
       }
     } catch (error) {
+      clearTimeout(timer);
       const savedData = await AsyncStorage.getItem('products');
       const data = JSON.parse(savedData);
       setItems(data);
     }
-
-  };
+  }, [user, page, searchTerm]);
 
   const handleSearchButtonPress = () => {
     setItems([]);
@@ -62,11 +87,10 @@ const Kho = ({ user }) => {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.item}>
-        <StatusBar backgroundColor="#00AFCE" />
         <View style={styles.itemContent}>
           <Text style={styles.text} >{item.TEN_SP}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>HSD: {moment(item.HSD).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.labelText}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
             {item.SO_CONT && <Text style={styles.valueText1}>Số cont: {item.SO_CONT}</Text>}
           </View>
           <View style={styles.itemRow}>
@@ -89,6 +113,7 @@ const Kho = ({ user }) => {
 
   return (
     <SafeAreaProvider style={styles.container}>
+      <StatusBar backgroundColor="#00AFCE" />
       <View style={{
         flexDirection: 'column', // Hiển thị các phần tử ngang hàng // Canh giữa các phần tử theo chiều dọc
         paddingHorizontal: 'center',
@@ -117,7 +142,7 @@ const Kho = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
-      {isLoading && <ActivityIndicator size="100" color={'#00AFCE'} />}
+      {isLoading && <ActivityIndicator style={{flex:1}} size="100" color={'#00AFCE'} />}
     </SafeAreaProvider>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, StatusBar } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const LoadingScreen = ({ navigation }) => {
@@ -13,7 +13,6 @@ const LoadingScreen = ({ navigation }) => {
 
   return (
     <SafeAreaProvider style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
-      <StatusBar backgroundColor="#fff" />
       <ActivityIndicator size="30" color={'#00AFCE'} />
     </SafeAreaProvider>
   );

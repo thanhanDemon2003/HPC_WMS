@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
 import React, {useContext } from 'react'
 import { AuthContext } from '../Context/Appcontext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 const Information = ({user}) => {
     const { logoutContext } = useContext(AuthContext);
-  
+
     const handleLogout = () => {
       Alert.alert(
         'Xác nhận',

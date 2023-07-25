@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, BackHandler } from 'react-native';
 import axios from '../API/Api';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,6 +17,7 @@ const Nhapkho = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -69,6 +70,8 @@ const Nhapkho = ({ user }) => {
   }, []);
 
   const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 5000);
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -79,18 +82,22 @@ const Nhapkho = ({ user }) => {
         url = await axios.locNhapHang(user, filterType, page, date, filterTypeTT);
       }
       if (state.isConnected) {
+        clearTimeout(timer);
+        setIsLoading(false);
         const response = url;
         data = response.items;
         await AsyncStorage.setItem('itemsNhap', JSON.stringify(data));
       } else {
+        clearTimeout(timer);
+        setIsLoading(false);
         const savedData = await AsyncStorage.getItem('itemsNhap');
         data = JSON.parse(savedData);
       }
-        if (page === 1) {
-          setItems(data);
-        } else {
-          setItems((prevItems) => [...prevItems, ...data]);
-        }
+      if (page === 1) {
+        setItems(data);
+      } else {
+        setItems((prevItems) => [...prevItems, ...data]);
+      }
     } catch (error) {
       Alert.alert(
         'Thông báo',
@@ -112,7 +119,7 @@ const Nhapkho = ({ user }) => {
         <View style={styles.itemContent}>
           <Text style={styles.text}>ND: {formattedData}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày nhập: {moment(item.NGAY_NHAP).format('DD-MM-YYYY')}</Text>
+          <Text style={styles.labelText}>Ngày nhập: {moment.utc(item.NGAY_NHAP).format('DD-MM-YYYY')}</Text>
             <Text style={styles.text1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -198,6 +205,7 @@ const Nhapkho = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
+      {isLoading && <ActivityIndicator size="100" color={'#00AFCE'} />}
     </SafeAreaProvider>
   );
 };
@@ -267,7 +275,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'black',
     fontFamily: 'seguisb',
-    marginTop:5
+    marginTop: 5
   },
   itemRow: {
     flexDirection: 'row',

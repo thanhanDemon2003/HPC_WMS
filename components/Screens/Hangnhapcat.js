@@ -1,12 +1,12 @@
 import React, { useEffect, useState  } from 'react';
-import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, BackHandler } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 
-const Hangnhapcat = ({route}) => {
+const Hangnhapcat = ({route, navigation}) => {
   
   const [items, setItems] = useState([]);
   const {sp} = route.params;
@@ -15,7 +15,20 @@ const Hangnhapcat = ({route}) => {
   useEffect(() => {
     fetchData();
   }, []);
+  
+  useEffect(() => {
+    const backAction = () => {
+        navigation.goBack();
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   const fetchData = async () => {
     try {
       const response = await axios.itemMua(sp);
@@ -30,7 +43,7 @@ const Hangnhapcat = ({route}) => {
       <View style={styles.itemContent}>
         <Text style={styles.text}>Tên sản phẩm: {item.TEN_SP}</Text>
         <View style={styles.itemRow}>
-        <Text style={styles.text1}>HSD: {moment(item.HSD).format('DD-MM-YYYY')}</Text>
+        <Text style={styles.text1}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
         <Text style={styles.text2}>Ref: {item.REF}</Text>
         </View>
         <View style={styles.itemDetails}>

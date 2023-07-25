@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, StatusBar } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, BackHandler, ToastAndroid } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
@@ -22,6 +22,7 @@ const LoginForm = ({ navigation }) => {
 
       if (user) {
         loginContext(user);
+        ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
         if (rememberPassword) {
           await AsyncStorage.setItem('username', username);
           await AsyncStorage.setItem('password', password);
@@ -55,7 +56,26 @@ const LoginForm = ({ navigation }) => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  let lastPress = 0;
 
+  useEffect(() => {
+    const backAction = () => {
+      if (lastPress + 3000 >= Date.now()) {
+        BackHandler.exitApp();
+      } else {
+        ToastAndroid.show('Nhấn lần nữa để thoát', ToastAndroid.SHORT);
+        lastPress = Date.now();
+      }
+      return true;
+    };
+  
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+  
+    return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
+  }, []);
   return (
     <SafeAreaProvider style={styles.container}>
       <Text style={styles.text}>Đăng Nhập</Text>

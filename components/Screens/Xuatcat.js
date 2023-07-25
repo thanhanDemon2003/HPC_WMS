@@ -1,6 +1,6 @@
 // Xuatkho.js
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, BackHandler } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +19,7 @@ const Xuatcat = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -70,6 +70,8 @@ const Xuatcat = ({ user }) => {
   }, []);
 
   const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 5000);
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -81,10 +83,14 @@ const Xuatcat = ({ user }) => {
         url = await axios.locItemBan(user, filterType, page, date, filterTypeTT);
       }
       if (state.isConnected) {
+        clearTimeout(timer);
+        setIsLoading(false);
         const response = url;
         data = response.items;
         await AsyncStorage.setItem('itemsXuat', JSON.stringify(data));
       } else {
+        clearTimeout(timer);
+        setIsLoading(false);
         const savedData = await AsyncStorage.getItem('itemsXuat');
         data = JSON.parse(savedData);
       }
@@ -116,7 +122,7 @@ const Xuatcat = ({ user }) => {
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày xuất: {moment(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.labelText}>Ngày xuất: {moment.utc(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -200,6 +206,7 @@ const Xuatcat = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
+      {isLoading && <ActivityIndicator size="100" color={'#00AFCE'} />}
     </SafeAreaProvider>
   );
 };

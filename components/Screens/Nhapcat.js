@@ -1,6 +1,6 @@
 // Xuatkho.js
-import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, BackHandler } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -20,8 +20,8 @@ const Nhapcat = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-
+  const [isLoading, setIsLoading] = useState(false);
+  const timer = useRef(null);
   const navigation = useNavigation();
 
   const handleItemPress = (item) => {
@@ -70,7 +70,12 @@ const Nhapcat = ({ user }) => {
     fetchData();
   }, []);
 
-  const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+  const fetchData = useCallback(async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
+    setIsLoading(true);
+    timer.current = setTimeout(() => setIsLoading(false), 5000);
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -82,10 +87,14 @@ const Nhapcat = ({ user }) => {
         url = await axios.locItemMua(user, filterType, page, date, filterTypeTT);
       }
       if (state.isConnected) {
+        clearTimeout(timer);
+        setIsLoading(false);
         const response = url;
         data = response.items;
         await AsyncStorage.setItem('itemsXuatcat', JSON.stringify(data));
       } else {
+        clearTimeout(timer);
+        setIsLoading(false);
         const savedData = await AsyncStorage.getItem('itemsXuatcat');
         data = JSON.parse(savedData);
       }
@@ -106,7 +115,7 @@ const Nhapcat = ({ user }) => {
       )
 
     }
-  };
+  });
 
   const renderItem = ({ item }) => {
     const jsonData = item.GHI_CHU;
@@ -117,7 +126,7 @@ const Nhapcat = ({ user }) => {
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày nhập: {moment(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.labelText}>Ngày nhập: {moment.utc(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -201,6 +210,7 @@ const Nhapcat = ({ user }) => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={1}
       />
+      {isLoading && <ActivityIndicator style={{flex:1}} size="100" color={'#00AFCE'} />}
     </SafeAreaProvider>
   );
 };
