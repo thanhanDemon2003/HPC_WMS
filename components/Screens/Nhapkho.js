@@ -255,12 +255,13 @@ const styles = StyleSheet.create({
   listContainer: {
     flexGrow: 0,
     justifyContent: 'center',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#fff',
   },
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 160,
+    marginBottom: 10,
+    minHeight: 160,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,

@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
     alignItems: 'right',
+    backgroundColor: 'white'
   },
   listContainer: {
     flexGrow: 1,
@@ -264,7 +265,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'center',
-    height: 140,
+    marginBottom: 10,
+    minHeight: 140,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,

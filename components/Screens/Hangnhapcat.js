@@ -69,6 +69,8 @@ const Hangnhapcat = ({route, navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
+
   },
   listContainer: {
     flexGrow: 1,
@@ -80,7 +82,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 170,
+    marginBottom: 10,
+    minHeight: 170,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,

@@ -8,7 +8,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 const Kho = ({ user }) => {
-
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
@@ -189,10 +188,11 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'center',
-    height: 150,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
+    marginBottom: 10,
+    minHeight: 150,
   },
   itemContent: {
     position: 'position',
