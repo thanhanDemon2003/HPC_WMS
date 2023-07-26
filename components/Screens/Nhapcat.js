@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     alignItems: 'left',
     justifyContent: 'center',
     marginBottom: 10,
-    minHeight: 140,
+    minHeight: 120,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,

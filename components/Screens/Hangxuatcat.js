@@ -83,11 +83,10 @@ const styles = StyleSheet.create({
     alignItems: 'left',
     justifyContent: 'space-around',
     marginBottom: 10,
-    minHeight: 170,
+    minHeight: 140,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
-
   },
   itemContent: {
     position: 'relative',

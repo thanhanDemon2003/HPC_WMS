@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    marginBottom: 10,
-    minHeight: 160,
+    marginBottom: 5,
+    minHeight: 140,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
