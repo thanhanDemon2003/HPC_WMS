@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   text: {
+    top:-5,
     fontSize: 16,
     fontWeight: 'medium',
     color: 'black',

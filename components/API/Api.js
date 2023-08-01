@@ -119,6 +119,7 @@ const Login = async (username, password) => {
     });
     return response.data;
   } catch (error) {
+    console.log(error);
     if (error.response && error.response.status === 400) {
       return (error.response.data);
     } else {

@@ -157,10 +157,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    width: '100%'
   },
   passwordContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: '',
     marginBottom: 10,
   },
   passwordInput: {
@@ -170,10 +171,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    width: '100%'
   },
   passwordIconContainer: {
     position: 'absolute',
     right: 10,
+    top:20
   },
   passwordIcon: {
     marginLeft: 5,
@@ -183,7 +186,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    left: -15
+    left: -15,
   },
   checkboxLabel: {
     marginLeft: -15,
@@ -201,6 +204,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     justifyContent: 'center',
+    width: '100%'
+
   }
 });
 
