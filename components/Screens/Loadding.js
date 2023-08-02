@@ -6,7 +6,7 @@ const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate('Bottomtab');
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timer); // This will clear the timer when the component unmounts.
   }, []);

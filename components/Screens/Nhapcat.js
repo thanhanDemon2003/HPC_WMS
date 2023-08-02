@@ -75,7 +75,7 @@ const Nhapcat = ({ user }) => {
       clearTimeout(timer.current);
     }
     setIsLoading(true);
-    timer.current = setTimeout(() => setIsLoading(false), 5000);
+    timer.current = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
       let data;

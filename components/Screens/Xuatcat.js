@@ -71,7 +71,7 @@ const Xuatcat = ({ user }) => {
 
   const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 5000);
+    const timer = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
       let data;

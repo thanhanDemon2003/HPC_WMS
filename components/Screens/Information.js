@@ -17,9 +17,9 @@ const Information = ({user}) => {
     };
   return (
     <SafeAreaProvider style={{flex: 1,backgroundColor:'white', alignItems: 'center'}}>
-      <TouchableOpacity
+      <TouchableOpacity onPress={handleLogout}
       style={{top:30,height:50, width:200, alignItems: 'center', backgroundColor: '#00AFCE', borderRadius: 10, justifyContent:'center'}}>
-        <Text style={{fontSize:20, color: 'white', fontFamily: 'Segoe UI', fontWeight: 'bold' }} onPress={handleLogout}>Đăng Xuất</Text></TouchableOpacity>
+        <Text style={{fontSize:20, color: 'white', fontFamily: 'Segoe UI', fontWeight: 'bold' }} >Đăng Xuất</Text></TouchableOpacity>
         {/* () => navigation.navigate('Login') */}
     </SafeAreaProvider>
   )

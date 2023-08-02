@@ -3,7 +3,7 @@ import 'moment-timezone';
 
 const api = axios.create({
   baseURL: 'http://222.252.6.94:3000/', 
-  timeout: 5000 ,
+  timeout: 5000,
 });
 const getItemsPage = async (user, page, searchTerm) => {
   try {
