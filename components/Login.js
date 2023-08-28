@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   passwordIcon: {
     marginLeft: 5,
-    marginTop: -10
+    marginTop: -5
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: '#00AFCE',
-    height: 40,
+    height: 48,
     borderRadius: 5,
     justifyContent: 'center',
     width: '100%'

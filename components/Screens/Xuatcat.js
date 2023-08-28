@@ -121,6 +121,7 @@ const Xuatcat = ({ user }) => {
       <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
+          <Text style={styles.text1}>ID: {item.ID_TRANSFER}</Text>
           <View style={styles.itemRow}>
             <Text style={styles.labelText}>Ngày xuất: {moment.utc(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
@@ -275,6 +276,13 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb'
+  },
+  text1: {
+    fontSize: 16,
+    fontWeight: 'medium',
+    color: 'black',
+    fontFamily: 'seguisb',
+    marginTop: 10
   },
   itemRow: {
     flexDirection: 'row',

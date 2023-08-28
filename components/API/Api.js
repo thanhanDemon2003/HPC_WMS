@@ -2,8 +2,7 @@ import axios from 'axios';
 import 'moment-timezone';
 
 const api = axios.create({
-  baseURL: 'http://222.252.6.94:3000/', 
-  timeout: 5000,
+  baseURL: 'https://hpc-api.io.vn:3002/', 
 });
 const getItemsPage = async (user, page, searchTerm) => {
   try {
@@ -29,6 +28,14 @@ const getExportItemsPage = async (user, filterType, page, date, filterTypeTT) =>
     throw error;
   }
 };
+const detailSanPhamKho = async (id_KH, maSP) => {
+  try {
+    const response = await api.get(`/ibibt/detailproductkho?id_KH=${id_KH}&maSP=${maSP}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 const detailSanPham = async (sp) => {
   try {
     const response = await api.get(`/ibibt/detailproduct?sp=${sp}`);
@@ -141,5 +148,6 @@ export default {
   locItemMua,
   locItemBan,
   itemMua,
-  itemBan
+  itemBan,
+  detailSanPhamKho
 };

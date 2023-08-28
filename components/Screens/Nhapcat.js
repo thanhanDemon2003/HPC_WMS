@@ -10,8 +10,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-
+import _ from 'lodash';
 
 const Nhapcat = ({ user }) => {
   const [items, setItems] = useState([]);
@@ -23,6 +22,7 @@ const Nhapcat = ({ user }) => {
   const [isLoading, setIsLoading] = useState(false);
   const timer = useRef(null);
   const navigation = useNavigation();
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleItemPress = (item) => {
     navigation.navigate('Hangnhapcat', { sp: item.ID_TRANSFER });
@@ -66,15 +66,21 @@ const Nhapcat = ({ user }) => {
     fetchData(filterType, status.status, date, 1);
   }
   useEffect(() => {
-    setPage(1);
-    fetchData();
-  }, []);
+    fetchData(filterType, filterTypeTT, date);
+  }, [filterType, filterTypeTT, date]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchData(filterType, filterTypeTT, date);
+    }
+  }, [page]);
 
   const fetchData = useCallback(async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
     setIsLoading(true);
+    setIsFetching(true);
     timer.current = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
@@ -114,6 +120,8 @@ const Nhapcat = ({ user }) => {
         ]
       )
 
+    }finally {
+      setIsFetching(false);
     }
   });
 
@@ -125,6 +133,7 @@ const Nhapcat = ({ user }) => {
       <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
+          <Text style={styles.text1}>ID: {item.ID_TRANSFER}</Text>
           <View style={styles.itemRow}>
             <Text style={styles.labelText}>Ngày nhập: {moment.utc(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
@@ -138,10 +147,11 @@ const Nhapcat = ({ user }) => {
     );
   }
 
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData(filterType, filterTypeTT, date);
-  };
+  const handleLoadMore = _.throttle(() => {
+    if (!isFetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 1000);
 
   const filterOptions = [
     { label: 'Tất cả', value: 'all' },
@@ -208,7 +218,7 @@ const Nhapcat = ({ user }) => {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContainer}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.1}
       />
       {isLoading && <ActivityIndicator style={{flex:1}} size="100" color={'#00AFCE'} />}
     </SafeAreaProvider>
@@ -263,6 +273,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   item: {
+    marginTop:-5,
     alignItems: 'left',
     justifyContent: 'center',
     marginBottom: 10,
@@ -280,6 +291,13 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb'
+  },
+  text1: {
+    fontSize: 16,
+    fontWeight: 'medium',
+    color: 'black',
+    fontFamily: 'seguisb',
+    marginTop: 10
   },
   itemRow: {
     flexDirection: 'row',

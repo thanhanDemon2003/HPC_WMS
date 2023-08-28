@@ -1,24 +1,29 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, StatusBar, ActivityIndicator, BackHandler, ToastAndroid } from 'react-native';
 import axios from '../API/Api';
-import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import _ from 'lodash';
 
 const Kho = ({ user }) => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const [searchTerm, setsearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   let lastPress = 0;
-  const timer  = useRef(null);
+  const timer = useRef(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleItemPress = (item) => {
+    navigation.navigate('Chitiettonkho', { user: user, maSP: item.MA_SP });
+  };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const backAction = () => {
@@ -37,7 +42,7 @@ const Kho = ({ user }) => {
       backAction
     );
 
-    return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
+    return () => backHandler.remove();
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -73,7 +78,7 @@ const Kho = ({ user }) => {
       const savedData = await AsyncStorage.getItem('products');
       const data = JSON.parse(savedData);
       setItems(data);
-    }
+    }setIsSearching(false);
   }, [user, page, searchTerm]);
 
   const handleSearchButtonPress = () => {
@@ -82,39 +87,32 @@ const Kho = ({ user }) => {
     fetchData();
   };
 
-
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
-          <Text style={styles.text} >{item.TEN_SP}</Text>
-          <View style={styles.itemRow}>
-            <Text style={styles.labelText}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
-            {item.SO_CONT && <Text style={styles.valueText1}>Số cont: {item.SO_CONT}</Text>}
-          </View>
-          <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ref: {item.REF}</Text>
-          </View>
+          <Text style={styles.text}>{item.TEN_SP}</Text>
           <View style={styles.itemRow}>
             <Text style={styles.valueText2}>{item.SL_TONKHO} Thùng</Text>
             <Text style={styles.valueText}>{item.KHOI_LUONG} Kg</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
-
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData();
-  };
+  const handleLoadMore = _.throttle(() => {
+    if (!isSearching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 1000);
 
   return (
-    <SafeAreaProvider style={styles.container}>
+    <SafeAreaProvider>
+    <View style={styles.container}>
       <StatusBar backgroundColor="#00AFCE" />
       <View style={{
-        flexDirection: 'column', // Hiển thị các phần tử ngang hàng // Canh giữa các phần tử theo chiều dọc
+        flexDirection: 'column',
         paddingHorizontal: 'center',
         marginBottom: 5, backgroundColor: 'white', borderBottomWidth: 0.5, alignItems: 'flex-start',
       }}>
@@ -126,7 +124,7 @@ const Kho = ({ user }) => {
           style={styles.searchBar}
           placeholder="Tìm kiếm..."
           value={searchTerm}
-          onChangeText={text => setsearchTerm(text)}
+          onChangeText={text => setSearchTerm(text)}
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearchButtonPress}>
           <Text style={styles.searchButtonText}>Tìm kiếm</Text>
@@ -136,12 +134,13 @@ const Kho = ({ user }) => {
         data={items}
         renderItem={renderItem}
         numColumns={1}
-        keyExtractor={(items, index) => index.toString()}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContainer}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.1}
       />
-      {isLoading && <ActivityIndicator style={{flex:1}} size="100" color={'#00AFCE'} />}
+      {isLoading && <ActivityIndicator style={{ flex: 1 }} size="large" color={'#00AFCE'} />}
+    </View>
     </SafeAreaProvider>
   );
 };
@@ -192,14 +191,14 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderBottomWidth: 0.5,
     marginBottom: 10,
-    minHeight: 150,
+    minHeight: 100,
   },
   itemContent: {
     position: 'position',
     margin: 10,
   },
   text: {
-    top:-5,
+    top: -5,
     fontSize: 16,
     fontWeight: 'medium',
     color: 'black',
@@ -224,7 +223,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#00AFCE',
     fontFamily: 'seguisb'
-
   },
   valueText2: {
     flex: 1,
