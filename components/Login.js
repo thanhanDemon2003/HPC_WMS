@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, BackHandler, ToastAndroid } from 'react-native';
-import { CheckBox, Button } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
 import axios from './API/Api';
@@ -19,9 +19,9 @@ const LoginForm = ({ navigation }) => {
     try {
       const response = await axios.Login(username, password);
       const user = response.user;
-
+      const thongTin = response.TT;
       if (user) {
-        loginContext(user);
+        loginContext(user, thongTin);
         ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
         if (rememberPassword) {
           await AsyncStorage.setItem('username', username);
@@ -74,7 +74,7 @@ const LoginForm = ({ navigation }) => {
       backAction
     );
   
-    return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
+    return () => backHandler.remove();
   }, []);
   return (
     <SafeAreaProvider style={styles.container}>

@@ -134,6 +134,23 @@ const Login = async (username, password) => {
     }
   }
 };
+const ChangePass = async (username, password, newPassword) => {
+  try {
+    const response = await api.post(`/ibibt/changepassword`, {
+      username: username,
+      oldPassword: password,
+      newPassword: newPassword
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      return (error.response.data);
+    } else {
+      throw error;
+    }
+  }
+}
 export default {
   getItemsPage,
   getExportItemsPage,
@@ -149,5 +166,6 @@ export default {
   locItemBan,
   itemMua,
   itemBan,
-  detailSanPhamKho
+  detailSanPhamKho,
+  ChangePass
 };

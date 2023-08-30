@@ -40,7 +40,7 @@ const Bottomtab = () => {
           } else if (route.name === 'XuatkhoScreen') {
             iconName = focused ? 'arrow-circle-right' : 'share-square';
           } else if (route.name === 'Information') {
-            iconName = focused ? 'sign-in' : 'user'
+            iconName = focused ? 'gear' : 'user'
           }else if (route.name === 'Nhapcat') {
             iconName = focused ? 'check' : 'shopping-cart';
           } else if (route.name === 'Xuatcat') {
