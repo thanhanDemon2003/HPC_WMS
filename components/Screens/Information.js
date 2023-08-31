@@ -56,7 +56,6 @@ const Information = ({ user }) => {
           style={styles.iconNext}
         />
         </TouchableOpacity>
-        
     </SafeAreaProvider>
   )
 }

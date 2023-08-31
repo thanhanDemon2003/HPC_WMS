@@ -10,7 +10,7 @@ const ChangePass = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [reNewPassword, setReNewPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
     const { logoutContext, thongtin } = useContext(AuthContext);
     const navigation = useNavigation();
 
@@ -49,7 +49,7 @@ const ChangePass = () => {
         }
         try {
             const response = await axios.ChangePass(username, password, newPassword);
-            if (response) {
+            if (response.success === true) {
                 let timeoutId = setTimeout(() => {
                     logoutContext();
                 }, 5000);
@@ -63,6 +63,9 @@ const ChangePass = () => {
                         }
                     }
                 ]);
+            }
+            else {
+                Alert.alert('Thông Báo', response.message)
             }
         }
         catch (error) {
