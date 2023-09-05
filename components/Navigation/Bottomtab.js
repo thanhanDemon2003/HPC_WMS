@@ -1,4 +1,4 @@
-import { StyleSheet, View, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, StatusBar, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Kho from '../Screens/Kho';
@@ -8,8 +8,6 @@ import Information from '../Screens/Information';
 import { AuthContext } from '../Context/Appcontext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import MenuDrawer from 'react-native-side-drawer'
-import { Text } from 'react-native-elements';
 import Nhapcat from '../Screens/Nhapcat';
 import Xuatcat from '../Screens/Xuatcat';
 
@@ -20,12 +18,6 @@ const Bottomtab = () => {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
     setOpen(!open);
-  };
-  const drawerContent = () => {
-    return (
-      <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-      </TouchableOpacity>
-    );
   };
   const navigation = useNavigation();
   return (
@@ -40,7 +32,7 @@ const Bottomtab = () => {
           } else if (route.name === 'XuatkhoScreen') {
             iconName = focused ? 'arrow-circle-right' : 'share-square';
           } else if (route.name === 'Information') {
-            iconName = focused ? 'sign-in' : 'user'
+            iconName = focused ? 'gear' : 'user'
           }else if (route.name === 'Nhapcat') {
             iconName = focused ? 'check' : 'shopping-cart';
           } else if (route.name === 'Xuatcat') {
@@ -66,7 +58,9 @@ const Bottomtab = () => {
           headerTitleStyle: {fontFamily: 'seguisb', color: 'white', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }
         }}
-        name="KhoScreen">{() => <Kho user={user} />}
+        name="KhoScreen">{
+          () => <Kho user={user} />
+          }
       </Tab.Screen>
       <Tab.Screen
         options={{
@@ -100,7 +94,7 @@ const Bottomtab = () => {
             fontFamily: 'seguisb' },
           tabBarLabel: 'Nhập Cắt',
           headerShown: true,
-          headerTitle: 'Danh Sách Hàng Nhập Cắt',
+          headerTitle: 'Nhập Cắt Chuyển',
           headerTitleAlign: 'center',
           headerTitleStyle: {fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' },
@@ -113,7 +107,7 @@ const Bottomtab = () => {
           tabBarLabelStyle: {
             fontFamily: 'seguisb' },
           headerShown: true,
-          headerTitle: 'Danh Sách Hàng Xuất Cắt',
+          headerTitle: 'Xuất Cắt Chuyển',
           headerTitleAlign: 'center',
           headerTitleStyle: { fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }
@@ -131,7 +125,7 @@ const Bottomtab = () => {
           headerTitleStyle: {fontFamily: 'seguisb', color: '#fff', fontSize: 25 },
           headerStyle: { backgroundColor: '#00AFCE' }
         }}
-        name="Information">{() => <Information user={user} />}
+        name="Information">{() => <Information/>}
       </Tab.Screen>
     </Tab.Navigator>
   );

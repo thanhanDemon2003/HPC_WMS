@@ -1,5 +1,5 @@
-// Xuatkho.js
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
@@ -9,8 +9,7 @@ import NetInfo from '@react-native-community/netinfo';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Ionicons';
-
-
+import _ from 'lodash';
 
 const Nhapcat = ({ user }) => {
   const [items, setItems] = useState([]);
@@ -19,9 +18,10 @@ const Nhapcat = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-
+  const timer = useRef(null);
   const navigation = useNavigation();
+  const [isFetching, setIsFetching] = useState(false);
+
 
   const handleItemPress = (item) => {
     navigation.navigate('Hangnhapcat', { sp: item.ID_TRANSFER });
@@ -64,12 +64,19 @@ const Nhapcat = ({ user }) => {
     setPage(1);
     fetchData(filterType, status.status, date, 1);
   }
-  useEffect(() => {
-    setPage(1);
-    fetchData();
-  }, []);
 
-  const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+  useEffect(() => {
+    fetchData(filterType, filterTypeTT, date);
+  }, [filterType, filterTypeTT, date]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchData(filterType, filterTypeTT, date);
+    }
+  }, [page]);
+
+  const fetchData = useCallback(async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    setIsFetching(true);
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -85,6 +92,8 @@ const Nhapcat = ({ user }) => {
         data = response.items;
         await AsyncStorage.setItem('itemsXuatcat', JSON.stringify(data));
       } else {
+        clearTimeout(timer);
+        setIsLoading(false);
         const savedData = await AsyncStorage.getItem('itemsXuatcat');
         data = JSON.parse(savedData);
       }
@@ -93,7 +102,6 @@ const Nhapcat = ({ user }) => {
       } else {
         setItems((prevItems) => [...prevItems, ...data]);
       }
-
     } catch (error) {
       Alert.alert(
         'Thông báo',
@@ -104,19 +112,21 @@ const Nhapcat = ({ user }) => {
         ]
       )
 
+    }finally {
+      setIsFetching(false);
     }
-  };
+  });
 
   const renderItem = ({ item }) => {
     const jsonData = item.GHI_CHU;
     const formattedData = jsonData.replace(/\n/g, ' ');
-
     return (
       <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
+          <Text style={styles.text1}>ID: {item.ID_TRANSFER}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày nhập: {moment(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.labelText}>Ngày nhập: {moment.utc(item.NGAY_CHUYEN).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -128,10 +138,11 @@ const Nhapcat = ({ user }) => {
     );
   }
 
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData(filterType, filterTypeTT, date);
-  };
+  const handleLoadMore = _.throttle(() => {
+    if (!isFetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 1000);
 
   const filterOptions = [
     { label: 'Tất cả', value: 'all' },
@@ -245,6 +256,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
     alignItems: 'right',
+    backgroundColor: 'white'
   },
   listContainer: {
     flexGrow: 1,
@@ -253,7 +265,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'center',
-    height: 140,
+    marginBottom: 5,
+    minHeight: 100,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
@@ -266,17 +279,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'medium',
     color: 'black',
-    fontFamily: 'seguisb'
+    fontFamily: 'seguisb',
+    textAlign: 'justify'
+  },
+  text1: {
+    fontSize: 16,
+    fontWeight: 'medium',
+    color: 'black',
+    fontFamily: 'seguisb',
+    marginTop:5
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    marginTop: 5,
   },
   labelText: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '100',
+    fontWeight: 'normal',
     color: 'black',
     fontFamily: 'Segoe UI'
   },
@@ -300,7 +323,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     flex: 1,
     fontSize: 15,
-    fontWeight: '200',
+    fontWeight: 'normal',
     color: 'black',
     fontFamily: 'Segoe UI'
   }

@@ -1,18 +1,31 @@
-import React, { useEffect, useState  } from 'react';
-import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Text, View, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 
 
 
-const Hang = ({route}) => {
-  
+const Hang = ({ route, navigation }) => {
+
   const [items, setItems] = useState([]);
-  const {sp} = route.params;
-  
+  const { sp } = route.params;
+
 
   useEffect(() => {
     fetchData();
+  }, []);
+  useEffect(() => {
+    const backAction = () => {
+        navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   const fetchData = async () => {
@@ -29,12 +42,12 @@ const Hang = ({route}) => {
       <View style={styles.itemContent}>
         <Text style={styles.text}>Tên sản phẩm: {item.TEN_SP}</Text>
         <View style={styles.itemRow}>
-        <Text style={styles.text1}>HSD: {moment(item.HSD).format('DD-MM-YYYY')}</Text>
-        <Text style={styles.text2}>Ref: {item.REF}</Text>
+          <Text style={styles.text1}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
+          <Text style={styles.text2}>Ref: {item.REF}</Text>
         </View>
         <View style={styles.itemDetails}>
-        <Text style={styles.detailText}>{item.SO_LUONG} Thùng </Text>
-        <Text style={styles.detailText1}>{item.KHOI_LUONG} Kg </Text>
+          <Text style={styles.detailText}>{item.SO_LUONG} Thùng </Text>
+          <Text style={styles.detailText1}>{item.KHOI_LUONG} Kg </Text>
         </View>
       </View>
     </View>
@@ -55,6 +68,7 @@ const Hang = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   listContainer: {
     flexGrow: 1,
@@ -66,7 +80,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 170,
+    marginBottom: 10,
+    minHeight: 100,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
@@ -85,23 +100,24 @@ const styles = StyleSheet.create({
 
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:10,
-    marginBottom:10
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   text1: {
-    flex:0,
+    flex: 0,
     left: 5,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
-    fontFamily: 'Segoe UI'
-
+    fontFamily: 'Segoe UI',
+    textAlign: 'justify'
   },
   text2: {
     textAlign: 'right',
-    flex:1,
+    flex: 1,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
@@ -113,18 +129,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailText: {
-    flex:0,
+    flex: 0,
     left: 5,
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#00AFCE',  
+    color: '#00AFCE',
     fontFamily: 'seguisb'
 
   },
   detailText1: {
     left: 3,
     textAlign: 'right',
-    flex:1,
+    flex: 1,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#00AFCE',

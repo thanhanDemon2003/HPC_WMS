@@ -1,11 +1,11 @@
 import React, { useEffect, useState  } from 'react';
-import { FlatList, Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 
 
 
-const Hangnhapcat = ({route}) => {
+const Hangnhapcat = ({route, navigation}) => {
   
   const [items, setItems] = useState([]);
   const {sp} = route.params;
@@ -14,7 +14,20 @@ const Hangnhapcat = ({route}) => {
   useEffect(() => {
     fetchData();
   }, []);
+  
+  useEffect(() => {
+    const backAction = () => {
+        navigation.goBack();
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   const fetchData = async () => {
     try {
       const response = await axios.itemMua(sp);
@@ -29,7 +42,7 @@ const Hangnhapcat = ({route}) => {
       <View style={styles.itemContent}>
         <Text style={styles.text}>Tên sản phẩm: {item.TEN_SP}</Text>
         <View style={styles.itemRow}>
-        <Text style={styles.text1}>HSD: {moment(item.HSD).format('DD-MM-YYYY')}</Text>
+        <Text style={styles.text1}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
         <Text style={styles.text2}>Ref: {item.REF}</Text>
         </View>
         <View style={styles.itemDetails}>
@@ -55,18 +68,19 @@ const Hangnhapcat = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
+
   },
   listContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
     backgroundColor: 'white'
-
-
   },
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 170,
+    marginBottom: 10,
+    minHeight: 120,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
@@ -82,13 +96,14 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb',
-
+    textAlign: 'justify'
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:10,
-    marginBottom:10
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   text1: {
     flex:0,

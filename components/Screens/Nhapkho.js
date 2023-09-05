@@ -1,14 +1,17 @@
+//Author: Nguyen Thanh An
+
+
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
+import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import _ from 'lodash';
 
 const Nhapkho = ({ user }) => {
   const [items, setItems] = useState([]);
@@ -17,7 +20,7 @@ const Nhapkho = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleItemPress = (item) => {
@@ -31,6 +34,7 @@ const Nhapkho = ({ user }) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
+
   const handleConfirm = (date) => {
     hideDatePicker();
     setItems([]);
@@ -38,6 +42,7 @@ const Nhapkho = ({ user }) => {
     setDate(date);
     fetchData(filterType, filterTypeTT, date);
   };
+
   const handleFilterChange = (value) => {
     setSelectedFilter(value.value);
     if (value.value === 'custom') {
@@ -45,52 +50,69 @@ const Nhapkho = ({ user }) => {
     } else {
       setItems([]);
       setPage(1);
-      fetchData(value.value, filterTypeTT, date, 1);
     }
   };
+
+
   const loaddulieubandau = async () => {
-    setPage(1);
     setSelectedFilterTT('1');
     setSelectedFilter('all');
     const savedData = await AsyncStorage.getItem('itemsXuat');
-    data = JSON.parse(savedData);
-  }
+    const data = JSON.parse(savedData);
+    setItems(data);
+  };
+
   const handleFilterChangeTT = (status) => {
     setSelectedFilterTT(status.status);
     setItems([]);
     setPage(1);
     fetchData(filterType, status.status, date, 1);
-  }
-
+  };
 
   useEffect(() => {
-    setPage(1);
-    fetchData();
-  }, []);
+    fetchData(filterType, filterTypeTT, date);
+  }, [filterType, filterTypeTT, date]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchData(filterType, filterTypeTT, date);
+    }
+  }, [page]);
+
 
   const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
       let data;
       let url;
+
       if (filterType === 'all' && filterTypeTT === '1') {
         url = await axios.getImportItemsPage(user, filterType, page, date, filterTypeTT);
       } else {
         url = await axios.locNhapHang(user, filterType, page, date, filterTypeTT);
       }
       if (state.isConnected) {
+        clearTimeout(timer);
+        setIsLoading(false);
         const response = url;
         data = response.items;
-        await AsyncStorage.setItem('itemsNhap', JSON.stringify(data));
-      } else {
-        const savedData = await AsyncStorage.getItem('itemsNhap');
-        data = JSON.parse(savedData);
-      }
-        if (page === 1) {
-          setItems(data);
-        } else {
-          setItems((prevItems) => [...prevItems, ...data]);
+        if (JSON.stringify(data) !== JSON.stringify(items)) {
+          await AsyncStorage.setItem('itemsXuat', JSON.stringify(data));
+          if (page === 1) {
+            setItems(data);
+          } else {
+            setItems((prevItems) => [...prevItems, ...data]);
+          }
         }
+      }
+      if (page === 1) {
+        setItems(data);
+      } else {
+        setItems((prevItems) => [...prevItems, ...data]);
+      }
+
     } catch (error) {
       Alert.alert(
         'Thông báo',
@@ -99,7 +121,7 @@ const Nhapkho = ({ user }) => {
           { text: 'Không', style: 'cancel' },
           { text: 'Có', onPress: loaddulieubandau }
         ]
-      )
+      );
     }
   };
 
@@ -111,8 +133,9 @@ const Nhapkho = ({ user }) => {
       <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
           <Text style={styles.text}>ND: {formattedData}</Text>
+          <Text style={styles.text12}>ID: {item.ID_IBT}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày nhập: {moment(item.NGAY_NHAP).format('DD-MM-YYYY')}</Text>
+          <Text style={styles.labelText}>Ngày nhập: {moment.utc(item.NGAY_NHAP).format('DD-MM-YYYY')}</Text>
             <Text style={styles.text1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -124,10 +147,10 @@ const Nhapkho = ({ user }) => {
     )
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = _.throttle(() => {
     setPage((prevPage) => prevPage + 1);
-    fetchData(filterType, filterTypeTT, date);
-  };
+}, 1000);
+
 
   const filterOptions = [
     { label: 'Tất cả', value: 'all' },
@@ -136,6 +159,7 @@ const Nhapkho = ({ user }) => {
     { label: 'Tháng', value: 'thisMonth' },
     { label: 'Tùy chọn', value: 'custom' },
   ];
+
   const filterOptionsTT = [
     { label: 'Tất cả', status: '1' },
     { label: 'Hoàn tất', status: '2' },
@@ -160,7 +184,8 @@ const Nhapkho = ({ user }) => {
             dropdownStyle={styles.filterDropdown}
             dropdownTextStyle={styles.filterDropdownText}
             rowStyle={{ borderBottomWidth: 0 }}
-          />{isDatePickerVisible && (
+          />
+          {isDatePickerVisible && (
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="date"
@@ -176,7 +201,7 @@ const Nhapkho = ({ user }) => {
             data={filterOptionsTT}
             defaultButtonText="Tất cả"
             defaultValue={filterTypeTT}
-            onSelect={(value) => handleFilterChangeTT(value)}
+            onSelect={(status) => handleFilterChangeTT(status)}
             buttonTextAfterSelection={(selectedItem) => selectedItem.label}
             rowTextForSelection={(item) => item.label}
             buttonStyle={styles.filterButton}
@@ -188,19 +213,20 @@ const Nhapkho = ({ user }) => {
           <Icon style={{ right: 40 }} name="caret-down-outline" size={18} color="#808080" />
         </View>
       </View>
-
       <FlatList
         data={items}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
         numColumns={1}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContainer}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.5}
       />
+      {isLoading && <ActivityIndicator size="large" color={'#00AFCE'} />}
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -247,12 +273,13 @@ const styles = StyleSheet.create({
   listContainer: {
     flexGrow: 0,
     justifyContent: 'center',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#fff',
   },
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 160,
+    marginBottom: 5,
+    minHeight: 120,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
@@ -260,20 +287,28 @@ const styles = StyleSheet.create({
   itemContent: {
     position: 'relative',
     margin: 10,
-
   },
   text: {
     fontSize: 16,
     fontWeight: '500',
     color: 'black',
     fontFamily: 'seguisb',
-    marginTop:5
+    marginTop: 5,
+    textAlign: 'justify',
+  },
+  text12: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+    fontFamily: 'seguisb',
+    marginTop: 5
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 5,
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   labelText: {
     flex: 1,

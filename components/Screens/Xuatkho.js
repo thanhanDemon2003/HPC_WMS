@@ -1,6 +1,5 @@
-// Xuatkho.js
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -9,8 +8,7 @@ import NetInfo from '@react-native-community/netinfo';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Ionicons';
-
-
+import _ from 'lodash';
 
 const Xuatkho = ({ user }) => {
   const [items, setItems] = useState([]);
@@ -19,7 +17,9 @@ const Xuatkho = ({ user }) => {
   const [filterTypeTT, setSelectedFilterTT] = useState('1');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  
 
   const navigation = useNavigation();
 
@@ -42,6 +42,7 @@ const Xuatkho = ({ user }) => {
     setDate(date);
     fetchData(filterType, filterTypeTT, date);
   };
+
   const handleFilterChange = (value) => {
     setSelectedFilter(value.value);
     if (value.value === 'custom') {
@@ -49,27 +50,40 @@ const Xuatkho = ({ user }) => {
     } else {
       setItems([]);
       setPage(1);
-      fetchData(value.value, filterTypeTT, date);
     }
   };
+
+
   const loaddulieubandau = async () => {
     setSelectedFilterTT('1');
     setSelectedFilter('all');
     const savedData = await AsyncStorage.getItem('itemsXuat');
-    data = JSON.parse(savedData);
-  }
+    const data = JSON.parse(savedData);
+    setItems(data);
+  };
+
   const handleFilterChangeTT = (status) => {
     setSelectedFilterTT(status.status);
     setItems([]);
     setPage(1);
     fetchData(filterType, status.status, date, 1);
-  }
+  };
+
   useEffect(() => {
-    setPage(1);
-    fetchData();
-  }, []);
+    fetchData(filterType, filterTypeTT, date);
+  }, [filterType, filterTypeTT, date]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchData(filterType, filterTypeTT, date);
+    }
+  }, [page]);
+
 
   const fetchData = async (filterType = 'all', filterTypeTT = '1', date = new Date(), retry = 0) => {
+    setIsFetching(true);
+  setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -81,12 +95,18 @@ const Xuatkho = ({ user }) => {
         url = await axios.locXuatHang(user, filterType, page, date, filterTypeTT);
       }
       if (state.isConnected) {
+        clearTimeout(timer);
+        setIsLoading(false);
         const response = url;
         data = response.items;
-        await AsyncStorage.setItem('itemsXuat', JSON.stringify(data));
-      } else {
-        const savedData = await AsyncStorage.getItem('itemsXuat');
-        data = JSON.parse(savedData);
+        if (JSON.stringify(data) !== JSON.stringify(items)) {
+          await AsyncStorage.setItem('itemsXuat', JSON.stringify(data));
+          if (page === 1) {
+            setItems(data);
+          } else {
+            setItems((prevItems) => [...prevItems, ...data]);
+          }
+        }
       }
       if (page === 1) {
         setItems(data);
@@ -102,8 +122,9 @@ const Xuatkho = ({ user }) => {
           { text: 'Không', style: 'cancel' },
           { text: 'Có', onPress: loaddulieubandau }
         ]
-      )
-
+      );
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -115,8 +136,9 @@ const Xuatkho = ({ user }) => {
       <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
           <Text style={styles.text} allowFontScaling={false}>ND: {formattedData}</Text>
+          <Text style={styles.text1}>ID: {item.ID_OBT}</Text>
           <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ngày xuất: {moment(item.NGAY_XUAT).format('DD-MM-YYYY')}</Text>
+            <Text style={styles.labelText}>Ngày xuất: {moment.utc(item.NGAY_XUAT).format('DD-MM-YYYY')}</Text>
             <Text style={styles.valueText1}>Trạng thái: {item.TRANG_THAI}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -126,12 +148,15 @@ const Xuatkho = ({ user }) => {
         </View>
       </TouchableOpacity>
     );
-  }
-
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData(filterType, filterTypeTT, date);
   };
+
+  const handleLoadMore = _.throttle(() => {
+    if (!isFetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 1000);
+  
+
 
   const filterOptions = [
     { label: 'Tất cả', value: 'all' },
@@ -140,12 +165,14 @@ const Xuatkho = ({ user }) => {
     { label: 'Tháng', value: 'thisMonth' },
     { label: 'Tùy chọn', value: 'custom' },
   ];
+
   const filterOptionsTT = [
     { label: 'Tất cả', status: '1' },
     { label: 'Hoàn tất', status: '2' },
     { label: 'Đang xử lý', status: '3' },
     { label: 'Hủy', status: '4' },
   ];
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.filterContainer}>
@@ -163,7 +190,8 @@ const Xuatkho = ({ user }) => {
             dropdownStyle={styles.filterDropdown}
             dropdownTextStyle={styles.filterDropdownText}
             rowStyle={{ borderBottomWidth: 0 }}
-          />{isDatePickerVisible && (
+          />
+          {isDatePickerVisible && (
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="date"
@@ -198,11 +226,13 @@ const Xuatkho = ({ user }) => {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContainer}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.5}
       />
+      {isLoading && <ActivityIndicator size="large" color={'#00AFCE'} />}
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -253,7 +283,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'left',
     justifyContent: 'center',
-    height: 140,
+    marginBottom: 2,
+    minHeight: 140,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
@@ -266,17 +297,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'medium',
     color: 'black',
+    fontFamily: 'seguisb',
+    textAlign: 'justify'
+  },
+  text1: {
+    marginTop: 5,
+    fontSize: 16,
+    fontWeight: 'medium',
+    color: 'black',
     fontFamily: 'seguisb'
   },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
+    width:'100%'
   },
   labelText: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '100',
+    fontWeight: 'medium',
     color: 'black',
     fontFamily: 'Segoe UI'
   },
@@ -300,7 +340,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     flex: 1,
     fontSize: 15,
-    fontWeight: '200',
+    fontWeight: 'medium',
     color: 'black',
     fontFamily: 'Segoe UI'
   }
