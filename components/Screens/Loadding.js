@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { View, ActivityIndicator, SafeAreaView } from 'react-native';
 
 const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate('Bottomtab');
-    }, 5000);
+    }, 2000);
 
-    return () => clearTimeout(timer); // This will clear the timer when the component unmounts.
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <SafeAreaProvider style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
-      <ActivityIndicator size="30" color={'#00AFCE'} />
-    </SafeAreaProvider>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
+      <ActivityIndicator size={30} color={'#00AFCE'} />
+    </SafeAreaView>
   );
 };
 

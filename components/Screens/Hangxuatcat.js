@@ -1,8 +1,7 @@
 import React, { useEffect, useState  } from 'react';
-import { FlatList, Text, View, StyleSheet, BackHandler } from 'react-native';
+import { FlatList, Text, View, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 
@@ -55,7 +54,7 @@ const Hangxuatcat = ({route, navigation}) => {
     </View>
   );
   return (
-    <SafeAreaProvider style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={items}
         renderItem={renderItem}
@@ -63,29 +62,28 @@ const Hangxuatcat = ({route, navigation}) => {
         numColumns={1}
         contentContainerStyle={styles.listContainer}
       />
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   listContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
     backgroundColor: 'white'
-
-
   },
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 170,
+    marginBottom: 10,
+    minHeight: 120,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
-
   },
   itemContent: {
     position: 'relative',
@@ -97,13 +95,14 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb',
-
+    textAlign: 'justify'
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:10,
-    marginBottom:10
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   text1: {
     flex:0,

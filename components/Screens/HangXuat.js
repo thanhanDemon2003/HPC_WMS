@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, SafeAreaView, BackHandler} from 'react-native';
+import { FlatList, Text, View, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
 import moment from 'moment';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Hangxuat = ({ route, navigation }) => {
   const [items, setItems] = useState([]);
@@ -14,7 +13,7 @@ const Hangxuat = ({ route, navigation }) => {
 
   useEffect(() => {
     const backAction = () => {
-        navigation.goBack();
+      navigation.goBack();
       return true;
     };
 
@@ -36,19 +35,19 @@ const Hangxuat = ({ route, navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <SafeAreaProvider style={styles.item}>
+    <View style={styles.item}>
       <View style={styles.itemContent}>
         <Text style={styles.text}>Tên sản phẩm: {item.TEN_SP}</Text>
         <View style={styles.itemRow}>
-        <Text style={styles.text1}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
-        <Text style={styles.text2}>Ref: {item.REF}</Text>
+          <Text style={styles.text1}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
+          <Text style={styles.text2}>Ref: {item.REF}</Text>
         </View>
         <View style={styles.itemDetails}>
           <Text style={styles.detailText}>{item.SL_XUAT} Thùng </Text>
           <Text style={styles.detailText1}> {item.KL_XUAT} Kg</Text>
         </View>
       </View>
-    </SafeAreaProvider>
+    </View>
   );
 
   return (
@@ -67,21 +66,23 @@ const Hangxuat = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   listContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
-    backgroundColor: '#F2F2F2',
-    backgroundColor:'white'
+    backgroundColor: 'white'
+
 
   },
   item: {
     alignItems: 'left',
     justifyContent: 'space-around',
-    height: 170,
+    marginBottom: 10,
+    minHeight: 100,
     backgroundColor: '#fff',
     borderColor: 'black',
-    borderWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
   itemContent: {
     position: 'relative',
@@ -93,24 +94,27 @@ const styles = StyleSheet.create({
     fontWeight: 'medium',
     color: 'black',
     fontFamily: 'seguisb',
+    textAlign: 'justify'
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   text1: {
+    flex: 0,
     left: 5,
-    flex:0,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
-    fontFamily: 'Segoe UI',
+    fontFamily: 'Segoe UI'
+
   },
   text2: {
     textAlign: 'right',
-    flex:1,
+    flex: 1,
     fontSize: 16,
     fontWeight: 'normal',
     color: 'black',
@@ -118,21 +122,25 @@ const styles = StyleSheet.create({
 
   },
   itemDetails: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent : 'space-between',
+    marginTop: 5,
   },
   detailText: {
-    flex:0,
+    flex: 0,
     left: 5,
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#00AFCE',  
+    color: '#00AFCE',
     fontFamily: 'seguisb'
 
   },
   detailText1: {
+    left: 3,
     textAlign: 'right',
-    flex:1,
+    flex: 1,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#00AFCE',

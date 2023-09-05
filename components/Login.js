@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, BackHandler, ToastAndroid } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Pressable, BackHandler, SafeAreaView } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet } from 'react-native';
 import axios from './API/Api';
 import { AuthContext } from './Context/Appcontext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 const LoginForm = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -19,10 +19,16 @@ const LoginForm = ({ navigation }) => {
     try {
       const response = await axios.Login(username, password);
       const user = response.user;
-
+      const thongtin =  response.TT
       if (user) {
-        loginContext(user);
-        ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
+        loginContext(user, thongtin);
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Thông báo',
+          text2: 'Đăng Nhập Thành Công',
+          visibilityTime: 2000, 
+        });
         if (rememberPassword) {
           await AsyncStorage.setItem('username', username);
           await AsyncStorage.setItem('password', password);
@@ -63,7 +69,6 @@ const LoginForm = ({ navigation }) => {
       if (lastPress + 3000 >= Date.now()) {
         BackHandler.exitApp();
       } else {
-        ToastAndroid.show('Nhấn lần nữa để thoát', ToastAndroid.SHORT);
         lastPress = Date.now();
       }
       return true;
@@ -77,7 +82,7 @@ const LoginForm = ({ navigation }) => {
     return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
   }, []);
   return (
-    <SafeAreaProvider style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Đăng Nhập</Text>
       <TextInput
         placeholderTextColor='black'
@@ -132,7 +137,8 @@ const LoginForm = ({ navigation }) => {
           }}>Đăng Nhập</Text>
         </Pressable>
       </View>
-    </SafeAreaProvider>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
+    </SafeAreaView>
   );
 };
 
@@ -142,6 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     backgroundColor: 'white',
+    alignItems: 'center',
   },
   text: {
     textAlign: 'center',
@@ -157,6 +164,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    width: '90%',
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -164,16 +172,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   passwordInput: {
-    flex: 1,
     height: 50,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    width: '90%',
   },
   passwordIconContainer: {
     position: 'absolute',
-    right: 10,
+    right: 20,
   },
   passwordIcon: {
     marginLeft: 5,
@@ -183,7 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    left: -15
+    marginRight:'62%'
   },
   checkboxLabel: {
     marginLeft: -15,
@@ -194,6 +202,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 10,
+    width: '80%',
   },
   button: {
     alignItems: 'center',
@@ -201,6 +210,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     justifyContent: 'center',
+
   }
 });
 

@@ -1,52 +1,35 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, StatusBar, ActivityIndicator, BackHandler, ToastAndroid } from 'react-native';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity, TextInput, StatusBar, ActivityIndicator, SafeAreaView } from 'react-native';
 import axios from '../API/Api';
-import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import _ from 'lodash';
 
 const Kho = ({ user }) => {
-
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const [searchTerm, setsearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   let lastPress = 0;
-  const timer  = useRef(null);
+  const timer = useRef(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleItemPress = (item) => {
+    navigation.navigate('Chitiettonkho', { user: user, maSP: item.MA_SP });
+  };
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    const backAction = () => {
-      if (lastPress + 3000 >= Date.now()) {
-        BackHandler.exitApp();
-      } else {
-        ToastAndroid.show('Nhấn lần nữa để thoát', ToastAndroid.SHORT);
-        lastPress = Date.now();
-        navigation.jumpTo('KhoScreen');
-      }
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove(); // Hủy đăng ký listener khi unmount
-  }, []);
+  }, [page]);
 
   const fetchData = useCallback(async () => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
     setIsLoading(true);
-    timer.current = setTimeout(() => setIsLoading(false), 5000);
+    timer.current = setTimeout(() => setIsLoading(false));
     try {
       const state = await NetInfo.fetch();
       let data;
@@ -74,7 +57,7 @@ const Kho = ({ user }) => {
       const savedData = await AsyncStorage.getItem('products');
       const data = JSON.parse(savedData);
       setItems(data);
-    }
+    }setIsSearching(false);
   }, [user, page, searchTerm]);
 
   const handleSearchButtonPress = () => {
@@ -83,39 +66,31 @@ const Kho = ({ user }) => {
     fetchData();
   };
 
-
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
         <View style={styles.itemContent}>
-          <Text style={styles.text} >{item.TEN_SP}</Text>
-          <View style={styles.itemRow}>
-            <Text style={styles.labelText}>HSD: {moment.utc(item.HSD).format('DD-MM-YYYY')}</Text>
-            {item.SO_CONT && <Text style={styles.valueText1}>Số cont: {item.SO_CONT}</Text>}
-          </View>
-          <View style={styles.itemRow}>
-            <Text style={styles.labelText}>Ref: {item.REF}</Text>
-          </View>
+          <Text style={styles.text}>{item.TEN_SP}</Text>
           <View style={styles.itemRow}>
             <Text style={styles.valueText2}>{item.SL_TONKHO} Thùng</Text>
             <Text style={styles.valueText}>{item.KHOI_LUONG} Kg</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
-
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-    fetchData();
-  };
-
+  const handleLoadMore = _.throttle(() => {
+    if (!isSearching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 1000);
+  
   return (
-    <SafeAreaProvider style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor:'white' }}>
       <StatusBar backgroundColor="#00AFCE" />
       <View style={{
-        flexDirection: 'column', // Hiển thị các phần tử ngang hàng // Canh giữa các phần tử theo chiều dọc
+        flexDirection: 'column',
         paddingHorizontal: 'center',
         marginBottom: 5, backgroundColor: 'white', borderBottomWidth: 0.5, alignItems: 'flex-start',
       }}>
@@ -127,7 +102,7 @@ const Kho = ({ user }) => {
           style={styles.searchBar}
           placeholder="Tìm kiếm..."
           value={searchTerm}
-          onChangeText={text => setsearchTerm(text)}
+          onChangeText={text => setSearchTerm(text)}
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearchButtonPress}>
           <Text style={styles.searchButtonText}>Tìm kiếm</Text>
@@ -137,20 +112,18 @@ const Kho = ({ user }) => {
         data={items}
         renderItem={renderItem}
         numColumns={1}
-        keyExtractor={(items, index) => index.toString()}
-        contentContainerStyle={styles.listContainer}
+        keyExtractor={(item, index) => index.toString()}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.5}
       />
-      {isLoading && <ActivityIndicator style={{flex:1}} size="100" color={'#00AFCE'} />}
-    </SafeAreaProvider>
+      {isLoading && <ActivityIndicator style={{ flex: 1 }} size="large" color={'#00AFCE'} />}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
     backgroundColor: 'white'
   },
   searchBar: {
@@ -185,40 +158,51 @@ const styles = StyleSheet.create({
   listContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
+    backgroundColor: 'white'
   },
   item: {
-    alignItems: 'left',
+    alignItems: 'center',
     justifyContent: 'center',
-    height: 150,
     backgroundColor: '#fff',
     borderColor: 'black',
     borderBottomWidth: 0.5,
-  },
+    marginBottom: 5,
+    minHeight: 100,
+  },  
   itemContent: {
-    position: 'position',
     margin: 10,
   },
   text: {
+    bottom: 5,
     fontSize: 16,
     fontWeight: 'medium',
     color: 'black',
-    fontFamily: 'seguisb'
+    fontFamily: 'seguisb',
+    textAlign: 'justify'
   },
   itemRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent : 'space-between',
     marginTop: 5,
   },
   labelText: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '100',
+    fontWeight: 'normal',
     color: 'black',
-    fontFamily: 'Segoe UI'
+    fontFamily: 'Segoe UI',
+  },
+  labelText1: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: 'normal',
+    color: 'black',
+    fontFamily: 'Segoe UI',
   },
   valueText: {
-    textAlign: 'right',
-    flex: 1,
+    flex: 0,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#00AFCE',
@@ -230,13 +214,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#00AFCE',
-    fontFamily: 'seguisb'
+    fontFamily: 'seguisb',
   },
   valueText1: {
-    textAlign: 'right',
-    flex: 1,
+    flex: 0,
     fontSize: 15,
-    fontWeight: '200',
+    fontWeight: 'normal',
     color: 'black',
     fontFamily: 'Segoe UI'
   },
